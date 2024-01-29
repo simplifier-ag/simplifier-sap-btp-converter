@@ -1,4 +1,4 @@
-# btp-converter
+# simplifier-sap-to-btp-converter
 
 This project converts Simplifier Fiori Apps build with Simplifier Low-Code and makes them available in the SAP Build Work Zone
 
