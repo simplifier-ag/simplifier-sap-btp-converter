@@ -1,6 +1,6 @@
 # btp-converter
 
-This project temporarily converts old BTP download apps from the Simplifier into a new structure and then makes them available in the SAP Build Work Zone. After restructuring the apps within the Simplifier, the project is obsolete
+This project converts Simplifier Fiori Apps build with Simplifier Low-Code and makes them available in the SAP Build Work Zone
 
 
 ## Convert
