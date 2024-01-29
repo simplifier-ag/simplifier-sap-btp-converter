@@ -1,0 +1,14 @@
+{
+    "name": "simplifier-LegacyTemplateAppName",
+    "version": "1.0.0",    
+    "scripts": {
+      "build": "mbt build",
+      "deploy:cf": "cross-var cf deploy mta_archives/simplifier-LegacyTemplateAppName_$npm_package_version.mtar",
+      "deploy": "run-s build deploy:cf"
+    },
+    "devDependencies": {
+      "cross-var": "^1.1.0",
+      "mbt": "^1.2.7",
+      "npm-run-all": "^4.1.5"
+    }
+}

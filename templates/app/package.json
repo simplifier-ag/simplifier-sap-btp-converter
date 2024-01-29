@@ -1,0 +1,9 @@
+{
+    "name": "LegacyTemplateAppName",
+    "version": "0.0.1",
+    "scripts": {
+      "build": "npm run clean && npm run zip",
+      "zip": "npx bestzip manifest-bundle.zip manifest.json && npx bestzip LegacyTemplateAppName-content.zip *",
+      "clean": "npx rimraf LegacyTemplateAppName-content.zip manifest-bundle.zip"
+    }
+  }

@@ -1,0 +1,29 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/user-api(.*)",
+      "target": "$1",
+      "service": "sap-approuter-userapi"
+    },
+    {
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "source": "^/client/(.*)$",
+      "destination": "LegacyTemplateSimplifierInstance"
+    },
+    {
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "source": "^/genToken/(.*)$",
+      "destination": "LegacyTemplateSimplifierInstanceGenToken"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}
