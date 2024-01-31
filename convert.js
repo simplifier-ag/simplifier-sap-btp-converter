@@ -26,21 +26,33 @@ const copyAppFiles = () => {
     return src([
         `${appName}/www/**/*.js`, 
         `${appName}/www/**/*.json`, 
-        `${appName}/www/**/*.css`,
-        `${appName}/www/**/*.properties`,
-        `${appName}/www/**/*.html`,
-        `${appName}/www/**/*.png`,
-        `${appName}/www/**/*.jpg`,
-        `${appName}/www/**/*.jpeg`,
-        `${appName}/www/**/*.map`,
-        `${appName}/www/resources/**`, 
-        `${appName}/www/img/**`, 
+        `${appName}/www/**/*.html`,    
+        `${appName}/www/resources/**`,        
+        `!${appName}/www/appDirect/**`,
+        `!${appName}/**/library-managed/**`,
         `!${appName}/**/system-library/**`, 
         '!gulpfile.js', 
         '!build/**', 
         '!node_modules/**'])
         .pipe(dest(`build/${appName}`))
 };
+
+const copyModuleFiles = () => {
+    console.log("coping module files")
+    return src([
+        `${appName}/www/appDirect/**`,
+        `!${appName}/www/appDirect/**/manifest.json`
+        ])
+        .pipe(dest(`build/${appName}/appDirect`))
+};
+
+const copyAssetDirectory = (assetDirectory) => {
+    console.log(`coping asset directory ${assetDirectory}`)
+    return () => {
+        return src([`${appName}/www/${assetDirectory}/**`])
+        .pipe(dest(`build/${appName}/${assetDirectory}`));
+    }
+}
 
 const injectLoaderDbg = () => {
     console.log("injecting loader")
@@ -151,6 +163,12 @@ const copyMTAPackage = () => {
 
 const convert = series(
     copyAppFiles, 
+    copyModuleFiles,
+    copyAssetDirectory("css"),
+    copyAssetDirectory("img"),
+    copyAssetDirectory("data"),
+    copyAssetDirectory("i18n"),
+    copyAssetDirectory("library-managed"),    
     injectLoaderDbg,
     injectLoaderPreload,
     copyLegacyLoader,

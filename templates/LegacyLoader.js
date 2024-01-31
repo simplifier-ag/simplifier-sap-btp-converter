@@ -8,15 +8,18 @@ sap.ui.define([
         var sMetadataUrl = sap.ui.require.toUrl(SimplifierSettings.appName + "/appbuilder-meta.json")
         var oAppMeta = await fetch(sMetadataUrl).then(m => m.json())        
         var baseUri = window.location.origin + sap.ui.require.toUrl("LegacyTemplateAppName");
-        SimplifierSettings.apiBaseUrl = baseUri + '/';    
-        SimplifierLoader.libraryRoot = SimplifierSettings.libBaseUrl = baseUri + '/library-managed'; 
+        SimplifierSettings.apiBaseUrl = baseUri + '/';
+        SimplifierLoader.libraryRoot = SimplifierSettings.libBaseUrl = baseUri + '/library-managed';         
     
         var _loadDependencies = async(oAppMeta) => {
             //SimplifierSettings.enableAnonymousLogin('');
-            SimplifierSettings.enableAssetFingerprinting(oAppMeta.fingerprint);
+            //SimplifierSettings.enableAssetFingerprinting(oAppMeta.fingerprint);
     
             return new Promise((fnResolve) => {
                 SimplifierLoader.provideScript('ui5');
+                SimplifierSettings.assetUrlPrefix = SimplifierSettings.apiBaseUrl
+                SimplifierSettings.moduleBaseUrl = SimplifierSettings.apiBaseUrl + '/appDirect/'
+                
                 SimplifierLoader.addCachedStyle('css/' + SimplifierSettings.appName + '.css', 'App-Style')
     
                 oAppMeta.assets.forEach(sAsset => {
@@ -50,6 +53,25 @@ sap.ui.define([
         sap.ui.loader.config({
             paths: oPaths
         });
+
+        await sap.ui.getCore().loadLibraries([
+            "sap.ui.support",
+            "sap.ui.rta",
+            "sap.tnt",
+            "sap.ui.dt",
+            "sap.ui.unified",
+            "sap.ui.codeeditor",
+            "sap.uxap",
+            "sap.ui.layout",
+            "sap.ui.integration",
+            "sap.ui.fl",
+            "sap.ui.suite",
+            "sap.ui.ux3",
+            "sap.f",
+            "sap.m",
+            "sap.ui.table"
+        ])
+                
         oAppMeta.namespaces.forEach(sap.ui.getCore().loadLibrary)
 
         return {

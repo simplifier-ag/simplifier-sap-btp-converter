@@ -1,6 +1,6 @@
-# simplifier-sap-to-btp-converter
+# btp-converter
 
-This project converts Simplifier Fiori Apps build with Simplifier Low-Code and makes them available in the SAP Build Work Zone
+This project temporarily converts old BTP download apps from the Simplifier into a new structure and then makes them available in the SAP Build Work Zone. After restructuring the apps within the Simplifier, the project is obsolete
 
 
 ## Convert
@@ -26,7 +26,17 @@ Check the following files and adjust values to your needs
 ## Deploy
 Within the converted app directory
 
-Make sure you are logged in to BTP (https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
+Make sure you are logged in to BTP (https://developers.sap.com/tutorials/cp-cf-download-cli.html)
+
+And install cf plugins
+
+```
+cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org
+```
+
+```
+cf install-plugin multiapps -f
+```
 
 ```
 cf login

@@ -60,8 +60,10 @@
             "css": []
         },
         "dependencies": {
-            "minUI5Version": "1.96.0",
-            "libs": {},
+            "minUI5Version": "1.71.0",
+            "libs": {
+                
+            },
             "components": {}
         },
         "models": {},
