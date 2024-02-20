@@ -18,7 +18,7 @@ sap.ui.define([
             return new Promise((fnResolve) => {
                 SimplifierLoader.provideScript('ui5');
                 SimplifierSettings.assetUrlPrefix = SimplifierSettings.apiBaseUrl
-                SimplifierSettings.moduleBaseUrl = SimplifierSettings.apiBaseUrl + '/appDirect/'
+                SimplifierSettings.moduleBaseUrl = SimplifierSettings.apiBaseUrl + 'appDirect/'
                 
                 SimplifierLoader.addCachedStyle('css/' + SimplifierSettings.appName + '.css', 'App-Style')
     

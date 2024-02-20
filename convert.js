@@ -54,8 +54,18 @@ const copyAssetDirectory = (assetDirectory) => {
     }
 }
 
-const injectLoaderDbg = () => {
+
+const injectLoader = () => {
     console.log("injecting loader")
+    return src([`build/${appName}/Component.js`])
+        .pipe(replace(
+            new RegExp(`sap.ui.define\\(\\["sap\\/ui\\/core\\/UIComponent","${appName}\\/controller\\/Globals"\\],function\\(([a-z]{1}),([a-z]{1})\\){"use strict";`, "g"),
+            `sap.ui.define(["${appName}/LegacyLoader", "sap/ui/core/UIComponent","${appName}/controller/Globals"], async function(LegacyLoader,$1,$2){"use strict";await LegacyLoader;`))
+        .pipe(dest(`build/${appName}`));
+};
+
+const injectLoaderDbg = () => {
+    console.log("injecting loader in dbg")
     return src([`build/${appName}/Component-dbg.js`])
         .pipe(replace('sap.ui.define([', `sap.ui.define([\n    '${appName}/LegacyLoader',`))
         .pipe(replace('function(UIComponent, Globals) {', 'async function(LegacyLoader, UIComponent, Globals) {'))
@@ -67,8 +77,8 @@ const injectLoaderPreload = () => {
     console.log("adjusting preload")
     return src([`build/${appName}/Component-preload.js`])
         .pipe(replace(
-            `sap.ui.define(["sap/ui/core/UIComponent","${appName}/controller/Globals"],function(e,o){"use strict";`, 
-            `sap.ui.define(["${appName}/LegacyLoader", "sap/ui/core/UIComponent","${appName}/controller/Globals"], async function(LegacyLoader,e,o){"use strict";await LegacyLoader;`))
+            new RegExp(`sap.ui.define\\(\\["sap\\/ui\\/core\\/UIComponent","${appName}\\/controller\\/Globals"\\],function\\(([a-z]{1}),([a-z]{1})\\){"use strict";`, "g"),
+            `sap.ui.define(["${appName}/LegacyLoader", "sap/ui/core/UIComponent","${appName}/controller/Globals"], async function(LegacyLoader,$1,$2){"use strict";await LegacyLoader;`))
         .pipe(dest(`build/${appName}`));        
 }
 
@@ -83,6 +93,18 @@ const copyLegacyLoader = () => {
 const minifyLegacyLoader = () => {
     console.log("minifing loader")
     return src(`build/${appName}/LegacyLoader.js`)
+        .pipe(minify({
+            ext:{
+                src:'-dbg.js',
+                min:'.js'
+            }
+        }))
+        .pipe(dest(`build/${appName}`));
+}
+
+const minifyComponent = () => {
+    console.log("minifing compontent")
+    return src(`build/${appName}/Component-dbg.js`)
         .pipe(minify({
             ext:{
                 src:'-dbg.js',
@@ -168,7 +190,9 @@ const convert = series(
     copyAssetDirectory("img"),
     copyAssetDirectory("data"),
     copyAssetDirectory("i18n"),
-    copyAssetDirectory("library-managed"),    
+    copyAssetDirectory("library-managed"),  
+      
+    injectLoader,
     injectLoaderDbg,
     injectLoaderPreload,
     copyLegacyLoader,
