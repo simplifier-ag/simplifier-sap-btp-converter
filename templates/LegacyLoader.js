@@ -3,6 +3,11 @@ sap.ui.define([
 ], async function(sfl) {
     "use strict";
 
+    // when already an appName is set, than this app was loaded by index.html -> do nothing
+    if (SimplifierSettings.appName !== "UnspecifiedApp") {
+        return Promise.resolve({})
+    }
+
     var initSettings = async () => {
         SimplifierSettings.setAppName('LegacyTemplateAppName');
         var sMetadataUrl = sap.ui.require.toUrl(SimplifierSettings.appName + "/appbuilder-meta.json")
