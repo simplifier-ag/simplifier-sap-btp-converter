@@ -9,7 +9,8 @@ sap.ui.define([
         var oAppMeta = await fetch(sMetadataUrl).then(m => m.json())        
         var baseUri = window.location.origin + sap.ui.require.toUrl("LegacyTemplateAppName");
         SimplifierSettings.apiBaseUrl = baseUri + '/';
-        SimplifierLoader.libraryRoot = SimplifierSettings.libBaseUrl = baseUri + '/library-managed';         
+        SimplifierLoader.libraryRoot = SimplifierSettings.libBaseUrl = baseUri + '/library-managed';    
+        SimplifierSettings.webSocketBaseUrl = SimplifierSettings.apiBaseUrl.replace(/^http:/i, 'ws:').replace(/^https:/i, 'wss:');
     
         var _loadDependencies = async(oAppMeta) => {
             //SimplifierSettings.enableAnonymousLogin('');
@@ -23,7 +24,7 @@ sap.ui.define([
                 SimplifierLoader.addCachedStyle('css/' + SimplifierSettings.appName + '.css', 'App-Style')
     
                 oAppMeta.assets.forEach(sAsset => {
-                    SimplifierLoader.addCachedScript(sAsset);
+                      SimplifierLoader.addCachedScript(sAsset);
                 });
     
                 oAppMeta.libraries.forEach(oLib => {

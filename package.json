@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "convert": "del-cli --force build && node convert.js"
+    "convert": "del-cli --force build && node convert.js"    
   },
   "devDependencies": {
     "del-cli": "^5.0.0",
