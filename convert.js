@@ -54,6 +54,68 @@ const copyAssetDirectory = (assetDirectory) => {
     }
 }
 
+const addUrlToIndexHtml = () => {
+    console.log("change index html")
+    
+    const regEx = new RegExp(`<html data-baseurl=".+">`, "g");
+        return src(`build/${appName}/index.html`)
+        .pipe(replace(
+            regEx, 
+            `<html data-baseurl="${url}" data-appDeploymentType="SAPCloudPlatform">`))
+        .pipe(dest(`build/${appName}`));
+}
+
+
+const copySimplifierLoader = () => {
+    console.log("coping simplifier loader")
+    return src([`templates/simplifierLoader.js`])        
+        .pipe(dest(`build/${appName}`));
+}
+
+const minifySimplifierLoader = () => {
+    console.log("minifing simplifier loader")
+    return src(`build/${appName}/simplifierLoader.js`)
+        .pipe(minify({
+            ext:{
+                src:'-dbg.js',
+                min:'.js'
+            }
+        }))
+        .pipe(dest(`build/${appName}`));
+}
+
+const injectSimplifierLoaderPreloadComponent = () => {
+    console.log("add simplifier loader to component preloade")
+    
+    const regEx = new RegExp(`"${appName}\\/simplifierLoader\\.js":function\\(\\){(\\n.+)`, "g");
+    const simplifierLoaderMinified = fs.readFileSync(`build/${appName}/simplifierLoader.js`, "utf8");  
+    return src(`build/${appName}/Component-preload.js`)
+        .pipe(replace(
+            regEx, 
+            `"${appName}/simplifierLoader.js": function(){
+                ${simplifierLoaderMinified}
+            `))
+        .pipe(dest(`build/${appName}`));
+    
+}
+
+const copyUi5AppLoader = () => {
+    console.log("coping ui5 app loader")
+    return src([`templates/ui5AppLoader.js`])        
+        .pipe(dest(`build/${appName}`));
+}
+
+const minifyUi5AppLoader = () => {
+    console.log("minifing ui5 app loader")
+    return src(`build/${appName}/ui5AppLoader.js`)
+        .pipe(minify({
+            ext:{
+                src:'-dbg.js',
+                min:'.js'
+            }
+        }))
+        .pipe(dest(`build/${appName}`));
+}
 
 const injectLoader = () => {
     console.log("injecting loader")
@@ -190,7 +252,18 @@ const convert = series(
     copyAssetDirectory("img"),
     copyAssetDirectory("data"),
     copyAssetDirectory("i18n"),
-    copyAssetDirectory("library-managed"),  
+    copyAssetDirectory("library-managed"),
+
+    // only needed for direct index.html access
+    addUrlToIndexHtml,
+
+    copySimplifierLoader,
+    minifySimplifierLoader,
+    injectSimplifierLoaderPreloadComponent,
+
+    copyUi5AppLoader,
+    minifyUi5AppLoader,
+    // only needed for direct index.html access end
       
     injectLoader,
     injectLoaderDbg,
