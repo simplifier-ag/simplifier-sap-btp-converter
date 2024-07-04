@@ -85,7 +85,7 @@ const minifySimplifierLoader = () => {
 }
 
 const injectSimplifierLoaderPreloadComponent = () => {
-    console.log("add simplifier loader to component preloade")
+    console.log("add simplifier loader to component preload")
     
     const regEx = new RegExp(`"${appName}\\/simplifierLoader\\.js":function\\(\\){(\\n.+)`, "g");
     const simplifierLoaderMinified = fs.readFileSync(`build/${appName}/simplifierLoader.js`, "utf8");  
@@ -94,7 +94,7 @@ const injectSimplifierLoaderPreloadComponent = () => {
             regEx, 
             `"${appName}/simplifierLoader.js": function(){
                 ${simplifierLoaderMinified}
-            `))
+            `.replace(/^ +/gm, '')))
         .pipe(dest(`build/${appName}`));
     
 }
@@ -177,14 +177,14 @@ const minifyComponent = () => {
 }
 
 const injectLoaderPreloadComponent = () => {
-    console.log("add loader to component preloade")
+    console.log("add loader to component preload")
     const legacyLoaderMinified = fs.readFileSync(`build/${appName}/LegacyLoader.js`, "utf8");  
     return src(`build/${appName}/Component-preload.js`)
         .pipe(replace(
             `sap.ui.require.preload({`, 
             `sap.ui.require.preload({\n"${appName}/LegacyLoader.js": function(){
                 ${legacyLoaderMinified}
-            },`))
+            },`.replace(/^ +/gm, '')))
         .pipe(dest(`build/${appName}`));
     
 }
@@ -245,6 +245,36 @@ const copyMTAPackage = () => {
         .pipe(dest(`build`));
 }
 
+const injectSimplifierSettingsToEventHolder = () => {
+    console.log("injecting simplifier settings in event holder")
+    return src([`build/${appName}/modules/EventHolder.js`])   
+        .pipe(replace(`sap.ui.define(["sap/ui/base/Object"]`, `sap.ui.define(["sap/ui/base/Object","${appName}/simplifierLoader"]`))
+        .pipe(replace(`//# sourceMappingURL=EventHolder.js.map`, ``))
+        .pipe(dest(`build/${appName}/modules`));  
+};
+
+const injectSimplifierSettingsToEventHolderDbg = () => {
+    console.log("injecting simplifier settings in event holder dbg")
+    return src([`build/${appName}/modules/EventHolder-dbg.js`])   
+        .pipe(replace(`sap.ui.define([\n    'sap/ui/base/Object'`, `sap.ui.define([\n    'sap/ui/base/Object',\n    '${appName}/simplifierLoader'`))
+        .pipe(dest(`build/${appName}/modules`));  
+};
+
+const injectEventHolderPreloadComponent = () => {
+    console.log("add event holder to component preload")
+    
+    const regEx = new RegExp(`"${appName}\\/modules/EventHolder\\.js":function\\(\\){(\\n.+)`, "g");
+    const eventHolderMinified = fs.readFileSync(`build/${appName}/modules/EventHolder.js`, "utf8");  
+    return src(`build/${appName}/Component-preload.js`)
+        .pipe(replace(
+            regEx, 
+            `"${appName}/modules/EventHolder.js": function(){
+                ${eventHolderMinified}
+            `.replace(/^ +/gm, '')))
+        .pipe(dest(`build/${appName}`));
+    
+}
+
 const convert = series(
     copyAppFiles, 
     copyModuleFiles,
@@ -264,7 +294,11 @@ const convert = series(
     copyUi5AppLoader,
     minifyUi5AppLoader,
     // only needed for direct index.html access end
-      
+    
+    injectSimplifierSettingsToEventHolderDbg,
+    injectSimplifierSettingsToEventHolder,
+    injectEventHolderPreloadComponent,
+
     injectLoader,
     injectLoaderDbg,
     injectLoaderPreload,
