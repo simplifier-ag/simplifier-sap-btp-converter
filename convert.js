@@ -121,6 +121,15 @@ const injectLoader = () => {
     console.log("injecting loader")
     return src([`build/${appName}/Component.js`])
         .pipe(replace(
+            new RegExp(`sap.ui.define\\(\\["sap\\/ui\\/core\\/UIComponent","${appName}\\/controller\\/Globals","${appName}/modules/SimplifierFormatter"\\],function\\(([a-z]{1}),([a-z]{1})\\){"use strict";`, "g"),
+            `sap.ui.define(["${appName}/LegacyLoader", "sap/ui/core/UIComponent","${appName}/controller/Globals","${appName}/modules/SimplifierFormatter"], async function(LegacyLoader,$1,$2){"use strict";await LegacyLoader;`))
+        .pipe(dest(`build/${appName}`));
+};
+
+const injectLoaderPreFormatter = () => {
+    console.log("injecting loader")
+    return src([`build/${appName}/Component.js`])
+        .pipe(replace(
             new RegExp(`sap.ui.define\\(\\["sap\\/ui\\/core\\/UIComponent","${appName}\\/controller\\/Globals"\\],function\\(([a-z]{1}),([a-z]{1})\\){"use strict";`, "g"),
             `sap.ui.define(["${appName}/LegacyLoader", "sap/ui/core/UIComponent","${appName}/controller/Globals"], async function(LegacyLoader,$1,$2){"use strict";await LegacyLoader;`))
         .pipe(dest(`build/${appName}`));
@@ -136,6 +145,15 @@ const injectLoaderDbg = () => {
 };
 
 const injectLoaderPreload = () => {
+    console.log("adjusting preload")
+    return src([`build/${appName}/Component-preload.js`])
+        .pipe(replace(
+            new RegExp(`sap.ui.define\\(\\["sap\\/ui\\/core\\/UIComponent","${appName}\\/controller\\/Globals","${appName}/modules/SimplifierFormatter"\\],function\\(([a-z]{1}),([a-z]{1})\\){"use strict";`, "g"),
+            `sap.ui.define(["${appName}/LegacyLoader", "sap/ui/core/UIComponent","${appName}/controller/Globals","${appName}/modules/SimplifierFormatter"], async function(LegacyLoader,$1,$2){"use strict";await LegacyLoader;`))
+        .pipe(dest(`build/${appName}`));        
+}
+
+const injectLoaderPreloadPreFormatter = () => {
     console.log("adjusting preload")
     return src([`build/${appName}/Component-preload.js`])
         .pipe(replace(
@@ -300,8 +318,11 @@ const convert = series(
     injectEventHolderPreloadComponent,
 
     injectLoader,
+    injectLoaderPreFormatter,
     injectLoaderDbg,
     injectLoaderPreload,
+    injectLoaderPreloadPreFormatter,
+    
     copyLegacyLoader,
     minifyLegacyLoader,
     injectLoaderPreloadComponent,
