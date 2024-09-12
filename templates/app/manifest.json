@@ -71,5 +71,8 @@
             "compact": true,
             "cozy": true
         }
+    },
+    "sap.platform.cf": {
+        "ui5VersionNumber": "1.96.x"
     }
 }
