@@ -78,7 +78,7 @@ sap.ui.define([
             "sap.ui.table"
         ])
                 
-        oAppMeta.namespaces.forEach(sap.ui.getCore().loadLibrary)
+        oAppMeta.namespaces.forEach(ns => sap.ui.getCore().loadLibrary(ns))
 
         return {
 
