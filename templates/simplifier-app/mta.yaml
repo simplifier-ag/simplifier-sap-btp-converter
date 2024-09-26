@@ -1,0 +1,59 @@
+ID: simplifier-LegacyTemplateAppName
+_schema-version: 3.2.0
+version: 1.0.0
+parameters:
+  enable-parallel-deployments: true
+modules:
+  - name: simplifier-LegacyTemplateAppName-destination-content
+    type: com.sap.application.content
+    build-parameters:
+      no-source: true
+    requires:      
+      - name: simplifier-shared-destination
+        parameters:
+          content-target: true
+      - name: simplifier-LegacyTemplateAppName-html5-repo-host
+        parameters:
+          service-key:
+            name: simplifier-LegacyTemplateAppName-html5-repo-host-key      
+    parameters:
+      content:
+        instance:
+          existing_destinations_policy: ignore
+          destinations:
+            - Name: simplifier-LegacyTemplateAppName-destination-html5
+              ServiceInstanceName: simplifier-LegacyTemplateAppName-html5-repo-host
+              ServiceKeyName: simplifier-LegacyTemplateAppName-html5-repo-host-key
+              sap.cloud.service: io.simplifier.shared
+  - name: LegacyTemplateAppName
+    type: html5
+    path: LegacyTemplateAppName
+    build-parameters:
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms: []
+  - name: webapp-deployer
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: simplifier-LegacyTemplateAppName-html5-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - LegacyTemplateAppName-content.zip
+          name: LegacyTemplateAppName
+          target-path: resources/
+resources:
+  - name: simplifier-shared-destination
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: simplifier-shared-destination
+  - name: simplifier-LegacyTemplateAppName-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo

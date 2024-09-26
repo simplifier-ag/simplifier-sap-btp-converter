@@ -11,13 +11,19 @@
       "authenticationType": "none",
       "csrfProtection": false,
       "source": "^/client/(.*)$",
-      "destination": "LegacyTemplateSimplifierInstance"
+      "destination": "SharedInstance"
     },
     {
       "authenticationType": "none",
       "csrfProtection": false,
       "source": "^/genToken/(.*)$",
-      "destination": "LegacyTemplateSimplifierInstanceGenToken"
+      "destination": "SharedInstanceGenToken"
+    },
+    {
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "source": "^/authentication/oauth/<PROVIDER>/propagation(.*)$",
+      "destination": "SharedInstancePropagateToken"
     },
     {
       "source": "^(.*)$",

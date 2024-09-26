@@ -6,7 +6,7 @@
       "existing_destinations_policy": "update",
       "destinations": [
         {
-          "Name": "LegacyTemplateSimplifierInstance",
+          "Name": "SharedInstance",
           "Description": "",
           "Authentication": "NoAuthentication",
           "ProxyType": "Internet",
@@ -15,17 +15,25 @@
           "HTML5.DynamicDestination": true
         },
         {
-          "Name": "LegacyTemplateSimplifierInstanceGenToken",
+          "Name": "SharedInstanceGenToken",
           "Description": "",
           "Authentication": "NoAuthentication",
           "ProxyType": "Internet",
           "Type": "HTTP",
           "URL": "LegacyTemplateSimplifierURL",
           "HTML5.DynamicDestination": true
+        },
+        {
+          "Name": "SharedInstancePropagateToken",
+          "Description": "",
+          "Authentication": "NoAuthentication",
+          "ProxyType": "Internet",
+          "Type": "HTTP",
+          "URL": "LegacyTemplateSimplifierURL",
+          "HTML5.DynamicDestination": true,
+          "HTML5.ForwardAuthToken": true
         }
       ]
     }
   }
 }
-
-

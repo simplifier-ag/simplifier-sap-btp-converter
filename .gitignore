@@ -1,0 +1,16 @@
+.idea
+
+node_modules
+
+app-build
+shared-build
+
+downloads
+
+.vscode/*
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix

@@ -1,12 +1,7 @@
 sap.ui.define([
     'LegacyTemplateAppName/simplifierLoader'    
 ], async function(sfl) {
-    "use strict";
-
-    // when already an appName is set, than this app was loaded by index.html -> do nothing
-    if (SimplifierSettings.appName !== "UnspecifiedApp") {
-        return Promise.resolve({})
-    }
+    "use strict";   
 
     var initSettings = async () => {
         SimplifierSettings.setAppName('LegacyTemplateAppName');
@@ -52,7 +47,7 @@ sap.ui.define([
         await _loadDependencies(oAppMeta)
         var oPaths = oAppMeta.namespaces.reduce((acc, ns) => {
             var sns = ns.replaceAll(".", "/");
-            acc[sns] = sap.ui.require.toUrl("LegacyTemplateAppName/resources/" + sns)
+            acc[sns] = sap.ui.require.toUrl("simplifier-shared/" + sns)
             return acc
         }, {})
     

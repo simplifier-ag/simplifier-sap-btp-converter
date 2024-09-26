@@ -1,0 +1,22 @@
+{
+  "name": "btp-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "convert": "del-cli --force downloads && del-cli --force app-build && del-cli --force shared-build && node index.js"
+  },
+  "devDependencies": {
+    "del-cli": "^5.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "decompress": "^4.2.1",
+    "gulp": "^5.0.0",
+    "gulp-minify": "^3.1.0",
+    "gulp-replace": "^1.1.4",
+    "js-yaml": "^4.1.0"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/user-api(.*)",
+      "target": "$1",
+      "service": "sap-approuter-userapi"
+    },
+    {
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "source": "^/client/(.*)$",
+      "destination": "SharedInstance"
+    },
+    {
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "source": "^/genToken/(.*)$",
+      "destination": "SharedInstanceGenToken"
+    },
+    {
+      "authenticationType": "none",
+      "csrfProtection": false,
+      "source": "^/authentication/oauth/<PROVIDER>/propagation(.*)$",
+      "destination": "SharedInstancePropagateToken"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ],
+  "websockets": {
+    "enabled": true
+  }
+}
